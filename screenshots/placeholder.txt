@@ -1,7 +1,0 @@
-Placeholders for Le Revenu app screenshots:
-- screenshots/home_light.png
-- screenshots/home_dark.png
-- screenshots/article_detail.png
-- screenshots/widget_gallery.png
-
-These files should be replaced with actual high-resolution device frames or mockups before submission.

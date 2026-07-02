@@ -1,124 +1,226 @@
-# Le Revenu — Mobile Home Page (Flutter Technical Test)
+# Le Revenu - Test technique Flutter
 
-This repository contains the home page implementation of a fictional mobile app for **Le Revenu**, a French financial and economic news media, developed as a Flutter technical test.
+Application mobile Flutter réalisée dans le cadre d'un test technique pour Overlord Technologies. Le projet reproduit une expérience éditoriale inspirée de Le Revenu, média français spécialisé dans l'information financière, patrimoniale et boursière.
 
-The app displays financial news covering stock markets (Bourse), real estate (Immobilier), personal investments (Placements), taxation (Fiscalité), and insurance (Assurance). It demonstrates clean architecture, visual brand alignment, custom motion design, and separation of concerns using Riverpod.
-
----
-
-## 1. Overview
-
-The application features:
-* **Market Index Ticker**: An interactive, horizontal scrolling bar showing real-time market updates (e.g., CAC 40, S&P 500, Bitcoin) with visual up/down arrows and tabular numbers.
-* **Cinematic Featured Stories ("À la une")**: A swipeable page view presenting primary editorial headlines with custom high-contrast gradient overlays and signature brand-red badges.
-* **Categorized News Feed**: Interactive filtering tabs allowing immediate in-memory re-filtering of articles, rendered using a staggered entrance animation.
-* **Fluid Shared-Element Transitions**: Hero animations that glide thumbnail/banner images from the homepage list directly into the detailed article screen.
-* **Adaptive Light & Dark Themes**: Full support for system-wide light/dark appearances mapped directly to Le Revenu's visual brand identity.
-* **Interactive Widget Gallery**: A developer-focused utility to inspect and isolate UI components under varying states.
-
-### Preview / Mockups
-You can find placeholders for app mockups in the `screenshots/` directory:
-
-| Light Theme | Dark Theme |
-| :---: | :---: |
-| ![Home Light](screenshots/home_light.png) | ![Home Dark](screenshots/home_dark.png) |
-
-| Article Detail | Widget Gallery |
-| :---: | :---: |
-| ![Article Detail](screenshots/article_detail.png) | ![Widget Gallery](screenshots/widget_gallery.png) |
+L'application propose un fil d'actualité, un carrousel "À la une", un bandeau de marché animé, une rubrique Bourse, une recherche locale, des écrans de détail, une section Placements, un profil utilisateur simulé et un parcours d'abonnement. Le travail met surtout l'accent sur la structure du code, la séparation des responsabilités, les composants réutilisables et une interface mobile cohérente avec un univers média financier.
 
 ---
 
-## 2. Getting Started
+## 1. Aperçu et captures d'écran
 
-### Prerequisites
-* **Flutter SDK**: `^3.9.2` (or latest stable)
-* **Dart SDK**: `^3.0.0` compatible environment
+Les captures ci-dessous correspondent à de vrais écrans de l'application exécutée, et non à des placeholders.
 
-### Execution Commands
-Clone the repository and run the following command to retrieve packages:
-```bash
-flutter pub get
+| Accueil clair | Accueil sombre |
+| :---: | :---: |
+| ![Accueil clair](screenshots/home_light.png) | ![Accueil sombre](screenshots/home_dark.png) |
+
+| Détail d'article |
+| :---: |
+| ![Détail d'article](screenshots/article_detail.png) |
+
+Fonctionnalités principales :
+
+* **Accueil éditorial** : articles mis en avant, fil d'actualité, filtres par rubrique et bannière d'abonnement.
+* **Ticker boursier animé** : bandeau horizontal avec indices, variations positives ou négatives et chiffres alignés.
+* **Rubrique Bourse** : indices, actions, cryptomonnaies, tri par nom, hausses ou baisses, fiches de valeurs et graphiques simulés.
+* **Recherche locale** : recherche dans les titres et extraits, avec filtrage par rubrique.
+* **Thèmes clair et sombre** : l'application suit le thème système via `ThemeMode.system`.
+* **Micro-interactions** : carrousel automatique, transitions `Hero`, animations d'apparition et skeleton loaders.
+
+---
+
+## 2. Installation et lancement
+
+### Prérequis
+
+Le projet a été vérifié avec :
+
+* Flutter 3.35.7, canal stable
+* Dart 3.9.2
+
+Le fichier `pubspec.yaml` déclare :
+
+```yaml
+environment:
+  sdk: ^3.9.2
 ```
 
-Launch the application on your target simulator or physical device:
+### Commandes
+
 ```bash
+flutter pub get
 flutter run
 ```
 
-> [!NOTE]
-> All application data is mocked locally inside a static layer (`MockData` and `MockHomeRepository`). No internet connectivity, API credentials, or backend services are required to run this project.
+Toutes les données sont fictives et déclarées localement dans `lib/data/mock/mock_data.dart`. Aucune API, clé d'accès, base de données ou configuration serveur n'est nécessaire.
 
 ---
 
-## 3. Architecture
+## 3. Architecture du projet
 
-The codebase adheres to a **Features-first (Domain-driven)** clean directory layout, ensuring modularity, isolation of concerns, and ease of scaling:
+Le projet suit une organisation orientée fonctionnalités, avec des couches communes pour le thème, les modèles et les composants partagés.
 
-```
+```text
 lib/
-├── core/
-│   ├── constants/       # AppSizes and spacing constants
-│   └── theme/           # AppTheme, AppColors, AppTypography, DateHelper
-├── data/
-│   ├── mock/            # Static mock data (MockData)
-│   ├── models/          # Immutable entities (Article, Author, Category, MarketIndex)
-│   └── repositories/    # Contracts (HomeRepository) and mock implementations (MockHomeRepository)
-├── features/
-│   ├── article_detail/  # Presentation screens for the article detail feature
-│   └── home/            # Presentation widgets, HomeController, and state providers
-├── shared/
-│   └── widgets/         # Reusable widgets (CategoryChip, ShimmerBox, FadeInWidget, WidgetGallery)
-└── main.dart            # Application bootstrap configuration
+  main.dart
+  core/
+    constants/
+      app_sizes.dart
+    theme/
+      app_colors.dart
+      app_theme.dart
+      app_typography.dart
+      date_helper.dart
+  data/
+    mock/
+      mock_data.dart
+    models/
+      article.dart
+      author.dart
+      category.dart
+      market_index.dart
+      stock_quote.dart
+      subscription_plan.dart
+    providers/
+      data_providers.dart
+    repositories/
+      home_repository.dart
+      mock_home_repository.dart
+  features/
+    actualites/
+    article_detail/
+    bourse/
+    home/
+    placements/
+    profil/
+    search/
+    splash/
+    subscription/
+  shared/
+    widgets/
 ```
 
-### Layering Flow
+### Rôle des dossiers
+
+* `core/` contient les fondations visuelles communes : couleurs, typographie, thème clair/sombre, espacements et aide au formatage des dates.
+* `data/models/` contient les modèles métier immuables : `Article`, `Author`, `Category`, `MarketIndex`, `StockQuote` et `SubscriptionPlan`.
+* `data/mock/` centralise toutes les données fictives utilisées par l'application.
+* `data/repositories/` définit le contrat `HomeRepository` et son implémentation fictive `MockHomeRepository`.
+* `data/providers/` expose les sources de données via Riverpod.
+* `features/` regroupe les écrans par domaine fonctionnel : accueil, bourse, actualités, placements, profil, recherche, détail d'article, splash screen et abonnement.
+* `shared/widgets/` rassemble les composants réutilisables : cartes d'articles, barre de catégories, ticker, navigation basse, shimmer, en-têtes de section et animations.
+
+### Découpage en couches
+
+Le flux principal de données de l'accueil suit cette chaîne :
+
+```text
+MockData
+  -> MockHomeRepository
+  -> HomeRepository
+  -> homeRepositoryProvider
+  -> HomeController
+  -> HomeState
+  -> HomeScreen
 ```
-[ Presentation (UI) ] ──> [ HomeController (State) ] ──> [ HomeRepository (Data Contract) ] ──> [ MockHomeRepository (Mock Data Layer) ]
-```
 
-* **Data Domain Abstraction**: Widgets do not access data directly. They fetch records from the `HomeRepository` interface. If we replace the `MockHomeRepository` with a real REST or GraphQL API backend in the future, the UI code, controller, and models require **zero modifications**.
-* **State Management**: Chosen **Riverpod** (`flutter_riverpod`) for state management. It provides compile-time safety, enforces unidirectional data flow, avoids context-coupling, and makes mocking/unit-testing individual controllers clean and straightforward.
+`MockData` représente la source de données actuelle. `MockHomeRepository` simule une couche d'accès aux données avec un délai artificiel, ce qui permet d'afficher de vrais états de chargement. `HomeRepository` sert de contrat : l'interface ne dépend donc pas directement de la donnée fictive.
 
----
+`HomeController` orchestre le chargement initial, le rafraîchissement, les erreurs, les filtres par catégorie et la liste d'articles affichée. `HomeState` garde un état explicite : chargement, rafraîchissement, articles complets, articles filtrés, articles mis en avant, catégories, indices de marché et message d'erreur.
 
-## 4. Key Design Decisions
+Cette séparation facilite une future intégration API. Il suffirait d'ajouter un repository réseau qui implémente `HomeRepository`, puis de remplacer le provider. Les écrans et widgets n'auraient pas besoin de connaître le détail de la nouvelle source de données.
 
-* **Slivers-based Layouts**: Instead of nesting nested scroll widgets, the main screen uses `CustomScrollView` and sliver nodes (`SliverAppBar`, `SliverList.builder`, `SliverToBoxAdapter`). This delegates layout calculation directly to the engine's lazy loader, avoiding heavy CPU decodes of image frames off-screen and keeping scrolling at a locked 60/120fps.
-* **Component Reusability**: Component tags like `CategoryChip` are used by both interactive selectors and static cards. Styling changes, color values, or tag radius settings propagate across all screens from a single component declaration.
-* **Motion & UX Polish**:
-  * **Hero Transitions**: Images morph smoothly from cards or list rows into the detail banner on tap.
-  * **Staggered Animations**: Feed items flow into view with cascading delays (`FadeInWidget` with index-based offsets).
-  * **Tab Switch Crossfade**: `AnimatedSwitcher` handles feed-swapping cleanly during category re-filtering.
-  * **Tabular Figures**: Numeric stock indicators in `MarketTickerBar` utilize `FontFeature.tabularFigures()` to prevent visual numbers-jitter.
+### Gestion d'état
 
----
+La gestion d'état repose sur `flutter_riverpod`, principalement avec `StateNotifierProvider<HomeController, HomeState>` pour l'accueil. Riverpod a été choisi pour garder une injection claire des dépendances, éviter de coupler l'état au `BuildContext` et rendre les contrôleurs plus simples à tester.
 
-## 5. Packages Used
+Les autres écrans utilisent de l'état local quand le besoin reste limité : tri dans Actualités, segment et tri dans Bourse, période de graphique dans le détail d'une valeur, recherche avec debounce, sélection mensuelle ou annuelle dans l'écran Abonnement.
 
-| Package | Version | Justification / Purpose |
-|---|---|---|
-| `flutter_riverpod` | `^2.5.1` | State management, chosen for compile-time safety, clean provider overrides, and testability. |
-| `google_fonts` | `^6.2.1` | Typography, used to cleanly load editorial and system font pairings without heavy asset bundling. |
-| `shimmer` | `^3.0.0` | Loading indicators, used to provide a modern, skeleton-based shimmer effect matching layout shapes during data fetches. |
-| `cupertino_icons` | `^1.0.8` | Fallback system icons for iOS style designs. |
+### Organisation des fonctionnalités
+
+* `home/` pilote l'expérience principale : `HomeScreen`, `HomeController`, `HomeState` et provider Riverpod.
+* `bourse/` contient une section autonome avec app bar dédiée, cartes d'indices, lignes de valeurs, tri, détail de valeur, graphique simulé et actualités liées.
+* `actualites/` affiche la liste complète des articles avec filtre par catégorie et tri par récence ou popularité simulée.
+* `placements/` propose un simulateur visuel non fonctionnel, des guides thématiques et des articles de placement.
+* `profil/` présente un profil utilisateur fictif, un état d'abonnement simulé et des entrées de paramètres non fonctionnelles.
+* `search/` fournit une recherche locale avec debounce et normalisation simple des accents.
+* `subscription/` affiche les formules d'abonnement, une FAQ et une boîte de dialogue indiquant que le paiement n'est pas implémenté.
 
 ---
 
-## 6. What's Mocked / Limitations
+## 4. Choix techniques et design
 
-* **Faux News & Tickers**: All index percentages, quotes, authors, and articles are generated locally and static on refresh.
-* **Tab Navigation**: Only the "Home" tab contains active layouts. The "Bourse", "Actualités", "Placements", and "Profil" tabs show structural placeholders.
-* **Deliberately Scoped Out**:
-  * **Theme Switcher UI**: The app adapts to the system-wide Dark/Light setting (`ThemeMode.system`) rather than embedding manual toggles to save development time.
-  * **Search & Alerts**: Search bar and notification actions display a "Coming Soon" Snackbar notification.
+### Identité visuelle
+
+La palette est centralisée dans `AppColors`. Le rouge sert de couleur de marque pour les appels à l'action, les badges et les éléments premium. Le bleu marine structure les zones éditoriales et les titres. Les hausses et baisses de marché utilisent des couleurs sémantiques distinctes.
+
+Les rubriques disposent aussi de couleurs propres : Bourse, Immobilier, Placements, Fiscalité et Assurance. L'objectif est de conserver une interface sobre, lisible et crédible pour un média financier.
+
+### Typographie
+
+La typographie est définie dans `AppTypography` avec `google_fonts` :
+
+* `Playfair Display` pour les titres éditoriaux et les grandes accroches.
+* `Inter` pour les textes d'interface, libellés, listes et chiffres.
+
+Ce choix permet de combiner une identité éditoriale avec une lecture confortable sur mobile.
+
+### Interface et performance
+
+L'accueil et la section Bourse utilisent des `CustomScrollView` avec slivers (`SliverAppBar`, `SliverList`, `SliverToBoxAdapter`). Cette approche évite d'empiler plusieurs zones scrollables et garde une structure adaptée aux longues listes.
+
+Les widgets partagés évitent la duplication : une même carte d'article est utilisée dans l'accueil, Actualités, Placements, Bourse, Recherche et les actualités liées. Les fichiers de la section Bourse sont volontairement découpés en sous-widgets pour garder les écrans lisibles.
+
+### Animations et détails UX
+
+* Le carrousel "À la une" utilise un `PageView` avec avancement automatique et indicateurs de page.
+* Le ticker boursier simule un flux financier continu avec une animation horizontale.
+* Les listes utilisent `FadeInWidget` pour une apparition progressive des contenus.
+* Les transitions `Hero` relient visuellement les cartes d'articles aux écrans de détail.
+* Les skeleton loaders avec `shimmer` rendent les états de chargement plus proches d'une application réelle.
+* Le splash screen utilise à la fois une configuration native et un écran Flutter dédié.
 
 ---
 
-## 7. What I'd Do With More Time
+## 5. Composants réutilisables
 
-1. **Real API Integration**: Hook the repository layer to a real economic/financial feeds endpoint (e.g. trading rates API, RSS feeds, or headless CMS).
-2. **Comprehensive Automated Testing**: Expand the unit tests (which already validate repo fetching) to cover full widget pumps, controller state shifts, and golden screenshots.
-3. **Accessibility Pass (A11y)**: Add clear semantic labels for screen readers (`Semantics` widgets) and verify contrast guidelines and dynamic text scaling limits.
-4. **CI/CD Pipeline Setup**: Configure GitHub Actions to automatically run `flutter analyze`, `dart format`, and executing tests on commits.
-5. **Brand Logo / SVG Integration**: Embed high-resolution SVGs for Le Revenu's official typography/mark instead of utilizing serif text.
+* `ArticleListTile` : utilisé dans l'accueil, Actualités, Placements, Bourse, Recherche et les actualités liées aux valeurs boursières.
+* `SectionHeader` : utilisé dans l'accueil, Bourse, Placements et la galerie de composants interne.
+* `CategoryTabBar` : utilisé dans l'accueil et Actualités pour filtrer les articles par rubrique.
+* `MarketTickerBar` : utilisé sur l'accueil pour afficher les indices de marché.
+* `FadeInWidget` : utilisé pour animer l'arrivée progressive des listes.
+* `AppBottomNavBar` : utilisé comme navigation principale entre Accueil, Bourse, Actualités, Placements et Profil.
+
+---
+
+## 6. Packages utilisés
+
+| Package | Version | Utilisation |
+|---|---:|---|
+| `flutter_riverpod` | `^2.5.1` | Gestion d'état et injection du repository pour l'accueil. |
+| `google_fonts` | `^6.2.1` | Chargement des polices `Playfair Display` et `Inter`. |
+| `shimmer` | `^3.0.0` | Skeleton loaders pendant les états de chargement. |
+| `cupertino_icons` | `^1.0.8` | Dépendance Flutter standard déclarée dans le projet, non utilisée directement dans `lib/`. |
+| `flutter_native_splash` | `^2.4.0` | Génération du splash screen natif. |
+| `flutter_launcher_icons` | `^0.13.1` | Génération des icônes d'application. |
+
+---
+
+## 7. Données simulées et limites connues
+
+* Les articles, auteurs, indices, actions, cryptomonnaies, abonnements et informations de profil sont fictifs.
+* Il n'y a pas de backend, d'authentification, de paiement réel ni de persistance locale.
+* Les boutons secondaires comme notifications, paramètres, aide, mentions légales, déconnexion, simulateur de placements et suivi d'une valeur affichent un message "à venir".
+* Les graphiques boursiers sont générés localement à partir de séries simulées.
+* Les images d'articles et d'auteurs proviennent d'URLs publiques de démonstration.
+* Certains textes dans le code source présentent des problèmes d'encodage d'accents à corriger avant une livraison réelle.
+
+---
+
+## 8. Améliorations possibles
+
+1. Brancher une vraie API éditoriale et financière derrière `HomeRepository`.
+2. Ajouter des tests widgets sur les principaux écrans et des tests unitaires plus complets sur les contrôleurs.
+3. Renforcer l'accessibilité : labels sémantiques, contraste, tailles de texte dynamiques et navigation clavier.
+4. Ajouter une persistance locale pour les favoris, les préférences et les derniers contenus consultés.
+5. Mettre en place une intégration continue avec `flutter analyze`, `dart format` et `flutter test`.
