@@ -1,0 +1,54 @@
+name: lerevenu
+description: "Le Revenu — Flutter mobile home page technical test."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.5.1
+  google_fonts: ^6.2.1
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  # Generates the native splash screen shown when the app first launches
+  flutter_native_splash: ^2.4.0
+  # Generates the app launcher icon shown on the device home screen
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/le_revenu_logo.jpeg
+    - assets/logo.jpg
+
+# ──────────────────────────────────────────────────────────────────────────────
+# App launcher icon (the icon shown on the device home screen / app drawer)
+# Uses le_revenu_logo.jpeg
+# Run: flutter pub run flutter_launcher_icons
+# ──────────────────────────────────────────────────────────────────────────────
+flutter_launcher_icons:
+  image_path: assets/le_revenu_logo.jpeg
+  android: true
+  ios: true
+  remove_alpha_ios: true
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Native splash screen (shown while the app loads on startup)
+# Uses logo.jpg
+# Run: flutter pub run flutter_native_splash:create
+# ──────────────────────────────────────────────────────────────────────────────
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/logo.jpg
+  android: true
+  ios: true
+  web: false
